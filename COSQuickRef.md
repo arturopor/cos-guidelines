@@ -1,43 +1,46 @@
 # Caché ObjectScript Quick Reference
-A list of some common ObjectScript expressions
+A list of some common ObjectScript expressions. **Note:** In order to distinguish actual text (things like "do", "set", "##class") from placeholder text (package names, class names, method names, variable names, object references, etc.) this document uses the convention of appending the text "Name" (packageName, className, methodName, varName, orefName, etc.) where necessary.
 
 ## Object/SQL Basics
 
 |      Action                                  |   Code                                                                            |
 |----------------------------------------------|-----------------------------------------------------------------------------------|
-| Call a class method                          | `Do ##class(package.class).method(arguments)`<br>`Set variable = ##class(package.class).method(arguments)`<br>Note: place a . before each pass-by-reference argument |
-| Call an instance method                      | `Do object.method(arguments)`<br>`Set variable = object.method(arguments)`<br>Note: place a . before each pass-by-reference argument |
-| Create a new object                          | `Set object = ##class(package.class).%New()`                                      |
-| Open an existing object                      | `Set object = ##class(package.class).%OpenId(id, concurrency, .status)`           |
-| Open an existing object by unique index value| `Set object = ##class(package.class).IndexNameOpen(value, concurrency, .status)`  |
-| Save an object                               | `Set status = object.%Save()`                                                     |
-| Retrieve the ID of a saved object            | `Set id = object.%Id()`                                                           |
-| Retrieve the OID of a saved object           | `Set oid = object.%Oid()`                                                         |
-| Retrieve property of a saved object          | `Set variable = ##class(package.class).GetStoredPropertyName(id)`                     |
-| Determine if an object was modified          | `Set variable = object.%IsModified()`                                             |
-| Validate an object without saving            | `Set status = object.%ValidateObject()`                                           |
-| Validate a property without saving           | `Set status = ##class(package.class).PropertyIsValid(object.Property)`            |
+| Call a class method                          | `Do ##class(packageName.className).methodName(arguments)`<br>`Set varName = ##class(packageName.className).methodName(arguments)`<br>Note: place a . before each pass-by-reference argument |
+| Call an instance method on an object         | `Do orefName.methodName(arguments)`<br>`Set varName = orefName.methodName(arguments)`<br>Note: place a . before each pass-by-reference argument |
+| Create a new object                          | `Set orefName = ##class(packageName.className).%New()`                            |
+| Open an existing object                      | `Set orefName = ##class(packageName.className).%OpenId(id, concurrency, .status)` |
+| Open an existing object by unique index value| `Set orefName = ##class(packageName.className).IndexNameOpen(value, concurrency, .status)`  |
+| Save an object                               | `Set status = orefName.%Save()`                                                   |
+| Retrieve the ID of a saved object            | `Set id = orefName.%Id()`                                                         |
+| Retrieve the OID of a saved object           | `Set oid = orefName.%Oid()`                                                       |
+| Retrieve property of a saved object          | `Set varName = ##class(packageName.className).propertyNameGetStored(id)`          |
+| Determine if an object was modified          | `Set varName = orefName.%IsModified()`                                            |
+| Validate an object without saving            | `Set status = orefName.%ValidateObject()`                                         |
+| Validate a property without saving           | `Set status = ##class(packageName.className).propertyNameIsValid(orefName.propertyName)`|
 | Print status after error                     | `Do $system.Status.DisplayError(status)`<br>`Write $system.Status.GetErrorText(status)` |
 | Obtain status details after error            | `Do $system.Status.DecomposeStatus(status, .err)`                                 |
-| Remove an object from process memory         | `Set object = ""`                                                                 |
-| Delete an existing object of a class         | `Set status = ##class(package.class).%DeleteId(id)`                               |
-| Delete all saved objects of a class          | `Do ##class(package.class).%DeleteExtent()`<br>`Do ##class(package.class).%KillExtent()` |
-| Reload properties of a saved object          | `Do object.%Reload()`                                                             |
-| Clone an object                              | `Set clonedObject = object.%ConstructClone()`                                     |
-| Write a property                             | `Write object.property`                                                           |
-| Set a property                               | `Set object.property = value`                                                     |
-| Write a class parameter                      | `Write ##class(package.class).#PARAMETER`                                         |
-| Set a serial (embedded) property             | `Set object.property.embeddedProperty = value`                                    |
-| Link two objects                             | `Set object1.referenceProperty = object2`                                         |
-| Populate a class                             | `Do ##class(package.class).Populate(count, verbose)`                              |
+| Convert status into exception object         | `Set exception = ##class(%Exception.StatusException).CreateFromStatus(status)`    |
+| Remove an object from process memory         | `Set orefName = ""`                                                               |
+| Delete an existing object of a class         | `Set status = ##class(packageName.className).%DeleteId(id)`                       |
+| Delete an existing object by unique index value| `Set status = ##class(packageName.className).IndexNameDelete(value)`            |
+| Delete all saved objects of a class          | `Do ##class(packageName.className).%DeleteExtent()`<br>`Do ##class(packageName.className).%KillExtent()` |
+| Reload properties of a saved object          | `Do orefName.%Reload()`                                                           |
+| Clone an object                              | `Set orefClonedName = orefName.%ConstructClone()`                                 |
+| Write a property                             | `Write orefName.propertyName`                                                     |
+| Set a property                               | `Set orefName.propertyName = value`                                               |
+| Write a class parameter                      | `Write ..#PARAMETER` <br> `Write ##class(packageName.className).#PARAMETER`       |
+| Set a serial (embedded) property             | `Set orefName.serialPropertyName.embeddedPropertyName = value`                    |
+| Link two objects                             | `Set oref1Name.propertyName = oref2Name`                                          |
+| Populate a class                             | `Do ##class(packageName.className).Populate(count, verbose)`                      |
 | Remove all objects in process memory         | `Kill`                                                                            |
 | List all objects in process memory           | `Do $system.OBJ.ShowObjects()`                                                    |
-| Display all properties of an object          | `Do $system.OBJ.Dump(object)`<br>`Zwrite object` (v2012.2+)                       |
-| Determine If variable is an object reference | `If $isobject(variable) ; 1=yes, 0=no`                                            |
-| Find classname of an object                  | `Write $classname(oref)`                                                          |
+| Display all properties of an object          | `Do $system.OBJ.Dump(orefName)`<br>`Zwrite orefName` (v2012.2+)                   |
+| Determine If variable is an object reference | `If $isobject(varName) ; 1=yes, 0=no`                                             |
+| Find classname of an object                  | `Write $classname(orefName)`                                                      |
 | Start the SQL shell                          | `Do $system.SQL.Shell()`                                                          |
-| Test a class query                           | `Do ##class(%ResultSet).RunQuery(class, query)`                                   |
-| Declare a variable's type for Studio Assist  | `#dim object as package.class`                                                    |
+| Check SQL privileges                         | `Do $system.SQL.CheckPriv()`                                                      |
+| Test a class query                           | `Do ##class(%ResultSet).RunQuery(className, queryName)`                           |
+| Declare a variable's type for IDE code completion  | `#dim orefName as packageName.className`                                    |
 
 ## ObjectScript Commands
 
@@ -59,10 +62,10 @@ A list of some common ObjectScript expressions
 
 | Action                                           | Code                                                        |
 |--------------------------------------------------|-------------------------------------------------------------|
-| Date conversion (external → internal)                | `Set variable = $zdh("mm/dd/yyyy")`                     |
-| Date conversion (internal → external)                | `Set variable = $zd(internalDate, format)`              |
-| Time conversion (external → internal)                | `Set variable = $zth("hh:mm:ss")`                       |
-| Time conversion (internal → external)                | `Set variable = $zt(internalTime, format)`              |
+| Date conversion (external → internal)                | `Set varName = $zdh("mm/dd/yyyy")`                      |
+| Date conversion (internal → external)                | `Set varName = $zd(internalDate, format)`               |
+| Time conversion (external → internal)                | `Set varName = $zth("hh:mm:ss")`                        |
+| Time conversion (internal → external)                | `Set varName = $zt(internalTime, format)`               |
 | Display current internal date/time string            | `Write $horolog`                                        |
 | Display UTC date/time string                         | `Write $ztimestamp`                                     |
 | Get the date relative to other date (any type)       | `Write $system.SQL.DATEADD("hh", -4, "yyyy-mm-dd hh:mm:ss")` |
@@ -89,7 +92,7 @@ A list of some common ObjectScript expressions
 | Display reversed string                                  | `Write $reverse(string)`                                      |
 | Display string after replacing characters                | `Write $translate(string, searchChars, replaceChars)`         |
 | Build a list                                             | `Set listString = $listbuild(list items, separated by comma)` |
-| Retrieve an item from a list                             | `Set variable = $list(listString, position)`                  |
+| Retrieve an item from a list                             | `Set listItem = $list(listString, position)`                  |
 | Retrieves elements sequentially from a list              | `Set pointerToNextElement = 0`<br> `While = $ListNext(listString, pointerToNextElement, value) {}` |
 | Put item into list string                                | `Set $list(listString, position) = substring`                 |
 | Display the length of a list                             | `Write $listlength(listString)`                               |
@@ -100,17 +103,17 @@ A list of some common ObjectScript expressions
 
 | Action                                           | Code                                                        |
 |--------------------------------------------------|-------------------------------------------------------------|
-| Check if variable exists                              | `Write $data(variable)`                                |
-| Return value of variable, or default If undefined     | `Write $get(variable, default)`                        |
+| Check if variable exists                              | `Write $data(varName)`                                 |
+| Return value of variable, or default If undefined     | `Write $get(varName, defaultVarName)`                  |
 | Return next valid subscript in array                  | `Write $order(array(subscript))`                       |
 
 ## Additional ObjectScript Functions
 
 | Action                                           | Code                                                                |
 |--------------------------------------------------|---------------------------------------------------------------------|
-| Increment ^global by increment                   | `$increment(^global, increment)`<br>`$sequence(^global)` |
+| Increment ^global by 1 (or by increment)         | `$increment(^globalName, increment)`<br>`$sequence(^globalName)`    |
 | Match a regular expression                       | `Set matches = $match(string, regularexpression)`                   |
-| Display random integer from start to start+count | `Write $random(count) + start`                                      |
+| Display random integer from start to start+(count-1) | `Write $random(count) + start`                                  |
 
 ## ObjectScript Special Variables
 
@@ -127,52 +130,52 @@ A list of some common ObjectScript expressions
 | Action                            | Code                                  |
 |-----------------------------------|---------------------------------------|
 | Change current namespace          | `Do ^%CD` <br> `zn "newnamespace"`    |
-| Display a ^global                 | `Do ^%G` <br> `zwrite ^global`        |
+| Display a ^global                 | `Do ^%G` <br> `zwrite ^globalName     |
 
 ## Collections
 
 | Action                                                       | Code                                                                                                       |
 |--------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| Create a new standalone list<br>Work with a list property    | `Set listObject=##class(%ListOfDataTypes).%New()`<br>Use methods below on a list collection property       |
-| Insert an element at the end of a list                       | `Do listObject.Insert(value)`<br>`Do object.listProperty.Insert(value)`                                    |
-| Insert an element into a list                                | `Do listObject.SetAt(value, position)`<br>`Do object.listProperty.SetAt(value, position)`                  |
-| Remove an element from a list                                | `Do listObject.RemoveAt(position)`<br>`Do object.listProperty.RemoveAt(position)`                          |
-| Display an element of a list                                 | `Write listObject.GetAt(position)`<br>`Write object.listProperty.GetAt(position)`                          |
-| Display the size of a list                                   | `Write listObject.Count()`<br>`Write object.listProperty.Count()`                                          |
-| Clear all the elements of a list                             | `Do listObject.Clear()`<br>`Do object.listProperty.Clear()`                                                |
-| Create a new standalone array<br>Work with an array property | `Set arrayObject=##class(%ArrayOfDataTypes).%New()`<br>Use methods below on an array collection property   |
-| Insert an element into an array                              | `Do arrayObject.SetAt(value, key)`<br>`Do object.arrayProperty.SetAt(value, key)`                          |
-| Remove an element from an array                              | `Do arrayObject.RemoveAt(key)`<br>`Do object.arrayProperty.RemoveAt(key)`                                  |
-| Display an element of an array                               | `Write arrayObject.GetAt(key)`<br>`Do object.arrayProperty.GetAt(key)`                                     |
-| Display the size of an array                                 | `Write arrayObject.Count()`<br>`Do object.arrayProperty.Count()`                                           |
-| Clear all elements of an array                               | `Do arrayObject.Clear()`<br>`Do object.arrayProperty.Clear()`                                              |
+| Create a new standalone list<br>Work with a list property    | `Set orefListName=##class(%ListOfDataTypes).%New()`<br>Use methods below on a list collection property       |
+| Insert an element at the end of a list                       | `Do orefListName.Insert(value)`<br>`Do orefName.listPropertyName.Insert(value)`                                    |
+| Insert an element into a list                                | `Do orefListName.SetAt(value, position)`<br>`Do orefName.listPropertyName.SetAt(value, position)`                  |
+| Remove an element from a list                                | `Do orefListName.RemoveAt(position)`<br>`Do orefName.listPropertyName.RemoveAt(position)`                          |
+| Display an element of a list                                 | `Write orefListName.GetAt(position)`<br>`Write orefName.listPropertyName.GetAt(position)`                          |
+| Display the size of a list                                   | `Write orefListName.Count()`<br>`Write orefName.listPropertyName.Count()`                                          |
+| Clear all the elements of a list                             | `Do orefListName.Clear()`<br>`Do orefName.listPropertyName.Clear()`                                                |
+| Create a new standalone array<br>Work with an array property | `Set orefArrayName=##class(%ArrayOfDataTypes).%New()`<br>Use methods below on an array collection property   |
+| Insert an element into an array                              | `Do orefArrayName.SetAt(value, key)`<br>`Do orefName.arrayPropertyName.SetAt(value, key)`                          |
+| Remove an element from an array                              | `Do orefArrayName.RemoveAt(key)`<br>`Do orefName.arrayPropertyName.RemoveAt(key)`                                  |
+| Display an element of an array                               | `Write orefArrayName.GetAt(key)`<br>`Do orefName.arrayPropertyName.GetAt(key)`                                     |
+| Display the size of an array                                 | `Write orefArrayName.Count()`<br>`Do orefName.arrayPropertyName.Count()`                                           |
+| Clear all elements of an array                               | `Do orefArrayName.Clear()`<br>`Do orefName.arrayPropertyName.Clear()`                                              |
 
 ## Relationships
 
 | Action                                  | Code                                                                                                         |
 |-----------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| Parent-to-children object linking       | `Do parentObject.childRefProperty.Insert(chilDobject)`<br>`Set chilDobject.parentRefProperty = parentObject` |
-| One-to-many object linking              | `Do oneObject.manyRefProperty.Insert(manyObject)`<br>`Set manyObject.OneRefProperty = OneObject`             |
-| Write a property of a child object      | `Write parentObject.childRefProperty.GetAt(position).property`                                               |
-| Write a property of a many object       | `Write oneObject.manyRefProperty.GetAt(position).property`                                                   |
-| Display the count of child/many objects | `Write parentObject.childRefProperty.Count()`<br>`Write oneObject.manyRefProperty.Count()`                   |
-| Open a many/child object directly       | `Set object = ##class(package.class).IDKEYOpen(parentID, childsub)`                                          |
-| Retrieve the id of a child object       | `Set status = ##class(package.class).IDKEYExists(parentID, childsub, .childID)`                              |
-| Clear the child/many objects            | `Do parentObject.childRefProperty.Clear()<br>Do oneObject.manyRefProperty.Clear()`                           |
+| Parent-to-children object linking       | `Do orefParentName.childPropertyName.Insert(orefChildName)`<br>`Set orefChildName.parentPropertyName = orefParentName` |
+| One-to-many object linking              | `Do orefOneName.manyPropertyName.Insert(orefManyName)`<br>`Set orefManyName.onePropertyName = orefOneName`             |
+| Write a property of a child object      | `Write orefParentName.childPropertyName.GetAt(position).propertyName`                                        |
+| Write a property of a many object       | `Write orefOneName.manyPropertyName.GetAt(position).propertyName`                                            |
+| Display the count of child/many objects | `Write orefParentName.childPropertyName.Count()`<br>`Write orefOneName.manyPropertyName.Count()`             |
+| Open a many/child object directly       | `Set orefName = ##class(packageName.className).IDKEYOpen(parentID, childsub)`                                |
+| Retrieve the id of a child object       | `Set status = ##class(packageName.className).IDKEYExists(parentID, childsub, .childID)`                      |
+| Clear the child/many objects            | `Do orefParentName.childPropertyName.Clear()<br>Do orefOneName.manyPropertyName.Clear()`                     |
 
 ## Streams
 
 | Action                                    | Code                                                                                  |
 |-------------------------------------------|---------------------------------------------------------------------------------------|
-| Create a new stream                       | `Set streamObject=##class(%Stream.GlobalCharacter).%New()`<br>`Set streamObject=##class(%Stream.GlobalBinary).%New()`<br>Use methods below on a stream property |
-| Add text to a stream                      | `Do streamObject.Write(text)`<br>`Do object.streamProperty.Write(text)`               |
-| Add a line of text to a stream            | `Do streamObject.WriteLine(text)`<br>`Do object.streamProperty.WriteLine(text)`       |
-| Read len characters of text from a stream | `Write streamObject.Read(len)`<br>`Write object.streamProperty.Read(len)`             |
-| Read a line of text from a stream         | `Write streamObject.ReadLine(len)`<br>`Write object.streamProperty.ReadLine(len)`     |
-| Go to the beginning of a stream           | `Do streamObject.Rewind()`<br>`Do object.streamProperty.Rewind()`                     |
-| Go to the end of a stream, for appending  | `Do streamObject.MoveToEnd()`<br>`Do object.streamProperty.MoveToEnd()`               |
-| Clear a stream                            | `Do streamObject.Clear()`<br>`Do object.streamProperty.Clear()`                       |
-| Display the length of a stream            | `Write streamObject.Size`<br>`Write object.streamProperty.Size`                       |
+| Create a new stream                       | `Set orefStreamName=##class(%Stream.GlobalCharacter).%New()`<br>`Set streamObject=##class(%Stream.GlobalBinary).%New()`<br>Use methods below on a stream property |
+| Add text to a stream                      | `Do orefStreamName.Write(text)`<br>`Do orefName.streamPropertyName.Write(text)`               |
+| Add a line of text to a stream            | `Do orefStreamName.WriteLine(text)`<br>`Do orefName.streamPropertyName.WriteLine(text)`       |
+| Read len characters of text from a stream | `Write orefStreamName.Read(len)`<br>`Write orefName.streamPropertyName.Read(len)`             |
+| Read a line of text from a stream         | `Write orefStreamName.ReadLine(len)`<br>`Write orefName.streamPropertyName.ReadLine(len)`     |
+| Go to the beginning of a stream           | `Do orefStreamName.Rewind()`<br>`Do orefName.streamPropertyName.Rewind()`                     |
+| Go to the end of a stream, for appending  | `Do orefStreamName.MoveToEnd()`<br>`Do orefName.streamPropertyName.MoveToEnd()`               |
+| Clear a stream                            | `Do orefStreamName.Clear()`<br>`Do orefName.streamPropertyName.Clear()`                       |
+| Display the length of a stream            | `Write orefStreamName.Size`<br>`Write orefName.streamPropertyName.Size`                       |
 
 ## Unit Testing Macros
 
