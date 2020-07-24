@@ -1,4 +1,4 @@
-# Caché ObjectScript Quick Reference
+# ObjectScript Quick Reference
 A list of some common ObjectScript expressions. **Note:** In order to distinguish actual text (things like "do", "set", "##class") from placeholder text (package names, class names, method names, variable names, object references, etc.) this document uses the convention of appending the text "Name" (packageName, className, methodName, varName, orefName, etc.) where necessary.
 
 ## Object/SQL Basics
@@ -52,7 +52,7 @@ A list of some common ObjectScript expressions. **Note:** In order to distinguis
 | `Do`                          | Execute method, procedure, or routine                                               |
 | `Quit` or `Return` (v2013.1)  | Terminate method, procedure, or routine. Optionally return value to calling method  |
 | `Continue`                    | Stop current loop iteration, and continue looping                                   |
-| `Halt`                        | Stop Caché process and close Terminal                                               |
+| `Halt`                        | Stop process and close Terminal                                               |
 | `Kill`                        | Destroy variable(s)                                                                 |
 | `If {} ElseIf {} Else {}`     | Evaluate conditions and branch                                                      |
 | `For {}`, `While {}`, `Do {} While` | Execute block of code repeatedly                                              |
